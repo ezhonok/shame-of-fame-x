@@ -3,7 +3,7 @@ Project 3
 Shame or Fame
 
 App for people to:
-1. Create posts about something bad that user witnessed but either didn’t require police involvement (littering/smoking/being that air pod asshole on CTA) or something that happened too fast for police to get involved and that community should be aware of as well (sexual harrassment) 
+1. Create posts about something bad that user witnessed but either didn’t require police involvement (littering/smoking) or something that happened too fast for police to get involved and that community should be aware of as well (sexual harrassment) 
 2. Create posts about something/someone awesome
 
 MVP
