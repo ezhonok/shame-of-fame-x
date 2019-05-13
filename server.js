@@ -3,6 +3,9 @@ const app 			= express()
 const bodyParser 	= require('body-parser')
 const cors 			= require('cors')
 const session 		= require('express-session')
+const multer		= require('multer')
+// const superagent	= require('./apiKey')
+
 
 require ('./db/db')
 
@@ -26,11 +29,11 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 const postController = require('./controllers/postController')
-const userController = require('./controllers/userController')
+// const userController = require('./controllers/userController')
 const authController = require('./controllers/authController')
 
-// app.use('/api', postController)
-// app.use('/auth', authController)
+app.use('/api/posts', postController)
+app.use('/auth', authController)
 
 app.listen(process.env.PORT || 9000, () => {
 	console.log('listening on port 9000');

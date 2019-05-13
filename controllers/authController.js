@@ -3,7 +3,8 @@ const router = express.Router()
 const User = require('../models/user')
 
 
-router.post('/', async (req, res) => {
+//registration
+router.post('/register', async (req, res, next) => {
 	console.log(req.body, ' this is the session');
 
 	try {
@@ -13,13 +14,44 @@ router.post('/', async (req, res) => {
 
 		res.json({
 			status: 200,
-			data: 'login successful'
+			data: 'registration successful'
 		})
 
 	} catch(err){
-		next(err);
+		res.status(400).json(error);
 	}
 })
+
+//login
+router.post('/login', async (req, res, next) => {
+  try{
+    const foundUser = await User.findOne({'username': req.body.username});
+    console.log(foundUser)
+
+		res.json({
+			status: 200,
+			data: 'login successful'
+		})
+
+  }catch(err) {
+    next(err)
+  }
+})
+
+//logout
+router.get('/logout', async (req, res, next) =>{
+	try{
+		req.session.destroy()
+		console.log(req.session);
+		res.json({
+				status: 200,
+				data: 'logout successful'
+			})
+	}catch(err) {
+		next(err)
+	}
+})
+
 
 
 
