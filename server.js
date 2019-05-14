@@ -6,11 +6,12 @@ const session 		= require('express-session')
 const multer		= require('multer')
 // const superagent	= require('./apiKey')
 
+require ('dotenv').config()
 
 require ('./db/db')
 
 app.use(session({
-	secret: 'nothing changes except what has to',
+	secret: process.env.SECRET,
 	resave: false,
 	saveUninitialized: false
 }))
@@ -20,7 +21,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 const corsOptions = {
-	origin: 'http://localhost:3000',
+	origin: process.env.FRONT_END_URL,
 	credentials: true,
 	optionSuccessStatus: 200
 }
@@ -36,7 +37,7 @@ app.use('/api/posts', postController)
 app.use('/auth', authController)
 
 app.listen(process.env.PORT || 9000, () => {
-	console.log('listening on port 9000');
+	console.log('listening on port ' + process.env.PORT);
 })
 
 
