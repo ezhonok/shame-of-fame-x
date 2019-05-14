@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/post');
-
+const User = require('../models/user')
 
 
 //Index route 
@@ -9,7 +9,7 @@ const Post = require('../models/post');
 
   console.log(req.body, ' this is index')
      try  {
-      const allPosts = await Post.find();
+      const allPosts = await Post.find().populate('user');
 
       res.json({
         status: 200,
@@ -22,13 +22,20 @@ const Post = require('../models/post');
 });
 
 
+
 //New 
 router.post('/', async (req, res) => {
 
   try {
     console.log(req.body, ' this is req.body');
     const createdPost = await Post.create(req.body);
+    const foundUser = await User.findById(req.body.userid)
+    foundUser.post.push(createdPost)
+    foundUser.save()
 
+    createdPost.user.push(foundUser)
+    createdPost.save()
+    
     res.json({
       status: 200,
       data: createdPost
@@ -46,6 +53,7 @@ router.get('/:id', async (req, res, next) => {
      try  {
       console.log('hitting the show route');
         const foundPost = await Post.findById(req.params.id);
+
         res.json({
           status: 200,
           data: foundPost

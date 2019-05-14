@@ -5,8 +5,15 @@ const postSchema = new mongoose.Schema({
 	description: String,
 	date: String,
 	img: String,
-	positive: Boolean
+	positive: Boolean,
+	user: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref:'User'
+	}],
+
 })
+
+
 
 
 
