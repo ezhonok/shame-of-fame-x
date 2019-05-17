@@ -6,10 +6,12 @@ const postSchema = new mongoose.Schema({
 	date: String,
 	img: String,
 	positive: Boolean,
-	user: [{
+	lat: Number,
+	lng: Number,
+	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref:'User'
-	}],
+	},
 
 })
 

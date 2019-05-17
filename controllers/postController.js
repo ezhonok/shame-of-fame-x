@@ -7,7 +7,7 @@ const User = require('../models/user')
 //Index route 
  router.get('/', async (req, res, next) => {
 
-  console.log(req.body, ' this is index')
+  console.log(req.body, ' get route')
      try  {
       const allPosts = await Post.find().populate('user');
 
@@ -29,12 +29,16 @@ router.post('/', async (req, res) => {
   try {
     console.log(req.body, ' this is req.body');
     const createdPost = await Post.create(req.body);
-    const foundUser = await User.findById(req.body.userid)
+    console.log("\nhere is createdPost");
+    console.log(createdPost);
+    const foundUser = await User.findById(req.session.userDataId)
+    console.log("\nhere is foundUser")
+    console.log(foundUser);
     foundUser.post.push(createdPost)
-    foundUser.save()
+    await foundUser.save()
 
-    createdPost.user.push(foundUser)
-    createdPost.save()
+    createdPost.user = foundUser
+    await createdPost.save()
     
     res.json({
       status: 200,
@@ -82,7 +86,9 @@ router.put('/:id', async (req, res) => {
 
 // Delete route
 router.delete('/:id', async (req, res) => {
+  console.log("delete route");
   try {
+
      const deletedPost = await Post.findByIdAndRemove(req.params.id);
       res.json({
         status: 200,

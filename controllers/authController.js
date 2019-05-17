@@ -2,36 +2,60 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
 
+const bcrypt = require('bcryptjs')
+
 
 //registration
 router.post('/register', async (req, res, next) => {
-	console.log(req.body, ' this is the session');
+	const password = req.body.password
+	const passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+	console.log(passwordHash);
+	const userData = {}
+	userData.username = req.body.username
+	userData.password = passwordHash
+	userData.img = req.body.img
+	console.log(userData, ' this is userData');
 
 	try {
-		const user = await User.create(req.body)
+
+		const createdUser = await User.create(userData)
 		req.session.logged = true;
+		req.session.userDataId = createdUser._id
 		req.session.username = req.body.username;
+		//store user id in session
 
 		res.json({
 			status: 200,
-			data: 'registration successful'
+			data: 'registration successful',
+			userId: createdUser._id
+			// createdUser: user
 		})
 
 	} catch(err){
-		res.status(400).json(error);
+		next(err)
 	}
 })
 
 //login
 router.post('/login', async (req, res, next) => {
   try{
-    const foundUser = await User.findOne({'username': req.body.username});
-    console.log(foundUser)
+    	const foundUser = await User.findOne({'username': req.body.username});
+    	console.log(foundUser)
+    	console.log(foundUser.password);
+    	// set session variables here
+    	if(foundUser){
+    	if(bcrypt.compareSync(req.body.password, foundUser.password) === true){
+    		req.session.logged = true
+    		req.session.userDataId = foundUser._id
+    		console.log('logged in successfully');
 
-		res.json({
+    		res.json({
 			status: 200,
 			data: 'login successful'
 		})
+
+    }
+	}	
 
   }catch(err) {
     next(err)
